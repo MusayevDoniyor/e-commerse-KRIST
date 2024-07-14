@@ -6,7 +6,7 @@ import downArrow from "./assets/arrowDown.svg";
 import searchIcon from "./assets/searchIcon.svg";
 import heartIcon from "./assets/heartIcon.svg";
 import cartIcon from "./assets/shoppingBasket.svg";
-import menuCLoseIcon from "./assets/menu-close.svg";
+import menuCloseIcon from "./assets/menu-close.svg";
 import menuOpenIcon from "./assets/menu-open.svg";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <header className="flex flex-col lg:flex-row justify-between items-center py-4 px-6">
+        <header className="flex flex-col lg:flex-row justify-between items-center py-5 px-6">
           <div className="text-5xl">
             <NavLink to={"/"}>KRIST</NavLink>
           </div>
@@ -27,11 +27,12 @@ function App() {
           <div className="lg:hidden flex justify-between items-center w-full mt-4">
             <button className="text-lg" onClick={toggleMenu}>
               {menuOpen ? (
-                <img src={menuOpenIcon} alt="" />
+                <img src={menuCloseIcon} alt="Close Menu" />
               ) : (
-                <img src={menuCLoseIcon} alt="" />
+                <img src={menuOpenIcon} alt="Open Menu" />
               )}
             </button>
+
             <ul className="flex gap-6 items-center">
               <li>
                 <NavLink to={"/"}>
@@ -83,6 +84,12 @@ function App() {
               <li>
                 <NavLink to={"/"}>Contact Us</NavLink>
               </li>
+
+              <li className="lg:hidden">
+                <button className="bg-black text-white py-3 px-8 rounded-xl">
+                  Login
+                </button>
+              </li>
             </ul>
           </nav>
 
@@ -103,6 +110,12 @@ function App() {
               <NavLink to={"/cart"}>
                 <img src={cartIcon} alt="Cart Page Icon" />
               </NavLink>
+            </li>
+
+            <li>
+              <button className="bg-black text-white py-3 px-8 rounded-xl">
+                Login
+              </button>
             </li>
           </ul>
         </header>
