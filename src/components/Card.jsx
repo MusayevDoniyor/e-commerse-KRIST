@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 
-const Card = ({ product, cart, setCart }) => {
+const Card = ({
+  product,
+  cart,
+  setCart,
+  toggleCartModal,
+  products,
+  setProducts,
+}) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden relative">
       <div className="relative group">
@@ -11,7 +18,11 @@ const Card = ({ product, cart, setCart }) => {
         />
         <div className="absolute bottom-0 left-0 right-0 bg-opacity-50 text-black px-10 py-3 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <button
-            onClick={() => setCart([...cart, product.id])}
+            onClick={() => {
+              setCart([...cart, product.id]);
+              setProducts([...products, product]);
+              toggleCartModal();
+            }}
             className="bg-slate-200 hover:bg-slate-300 text-black font-medium px-2 py-3 rounded-md text-lg"
           >
             <span className="ml-2">Add to Cart</span>

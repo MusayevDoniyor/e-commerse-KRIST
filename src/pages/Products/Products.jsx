@@ -5,8 +5,9 @@ import api from "../../api/api";
 import checkedIcon from "../../assets/checkedIcon.svg";
 import Card from "../../components/Card";
 import downArrow from "../../assets/arrowDown.svg";
+import rightArrowIcon from "../../assets/rightArrowIcon.svg";
 
-const Products = () => {
+const Products = ({ cart, setCart, toggleCartModal, setProducts }) => {
   const dispatch = useDispatch();
   const products = useSelector((store) => store.productsReducer.products);
 
@@ -101,7 +102,7 @@ const Products = () => {
       }
 
       try {
-        const response = await api.get(`${baseURL}/products`);
+        const response = await api.get(query);
         dispatch(addProducts(response.data));
         console.log(response.data);
       } catch (error) {
@@ -121,7 +122,11 @@ const Products = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[275px,1fr] gap-6 p-6">
       <aside className="bg-gray-50 p-6 rounded-lg">
-        <div className="mb-4">Shop &gt; All Products</div>
+        <div className="mb-4 flex text-base items-center">
+          Shop
+          <img className="size-5" src={rightArrowIcon} alt="Right Arrow Icon" />
+          All Products
+        </div>
 
         <div
           className="flex justify-between items-center cursor-pointer"
@@ -210,15 +215,25 @@ const Products = () => {
 
       <main className="p-6 rounded-lg ">
         {loading ? (
-          <p>Loading...</p>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+          </div>
         ) : products.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {products.map((product) => (
-              <Card key={product.id} product={product} />
+              <Card
+                key={product.id}
+                product={product}
+                cart={cart}
+                setCart={setCart}
+                toggleCartModal={toggleCartModal}
+                products={products}
+                setProducts={setProducts}
+              />
             ))}
           </div>
         ) : (
-          <p>No products</p>
+          <p className="text-3xl font-semibold">No products :(</p>
         )}
       </main>
     </div>

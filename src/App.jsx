@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import { useState } from "react";
-import Cart from "./pages/Cart/Cart";
 import Products from "./pages/Products/Products";
 import downArrow from "./assets/arrowDown.svg";
 import searchIcon from "./assets/searchIcon.svg";
@@ -8,12 +7,20 @@ import heartIcon from "./assets/heartIcon.svg";
 import cartIcon from "./assets/shoppingBasket.svg";
 import menuCloseIcon from "./assets/menu-close.svg";
 import menuOpenIcon from "./assets/menu-open.svg";
+import backIcon from "./assets/backIcon.svg";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartModalOpen, setCartModalOpen] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const toggleCartModal = () => {
+    setCartModalOpen(!cartModalOpen);
   };
 
   return (
@@ -27,9 +34,9 @@ function App() {
           <div className="lg:hidden flex justify-between items-center w-full mt-4">
             <button className="text-lg" onClick={toggleMenu}>
               {menuOpen ? (
-                <img src={menuCloseIcon} alt="Close Menu" />
-              ) : (
                 <img src={menuOpenIcon} alt="Open Menu" />
+              ) : (
+                <img src={menuCloseIcon} alt="Close Menu" />
               )}
             </button>
 
@@ -46,8 +53,13 @@ function App() {
                 </NavLink>
               </li>
 
-              <li>
-                <NavLink to={"/cart"}>
+              <li className="relative">
+                <NavLink to="#" onClick={toggleCartModal}>
+                  {cart.length > 0 && (
+                    <span className="absolute bg-black text-white rounded-full text-center items-center py-[2px] px-[8px] text-sm bottom-4 left-3">
+                      {cart.length}
+                    </span>
+                  )}
                   <img src={cartIcon} alt="Cart Page Icon" />
                 </NavLink>
               </li>
@@ -106,8 +118,13 @@ function App() {
               </NavLink>
             </li>
 
-            <li>
-              <NavLink to={"/cart"}>
+            <li className="relative">
+              <NavLink to="#" onClick={toggleCartModal}>
+                {cart.length > 0 && (
+                  <span className="absolute bg-black text-white rounded-full text-center items-center py-[2px] px-[8px] text-sm bottom-4 left-3">
+                    {cart.length}
+                  </span>
+                )}
                 <img src={cartIcon} alt="Cart Page Icon" />
               </NavLink>
             </li>
@@ -121,9 +138,91 @@ function App() {
         </header>
 
         <Routes>
-          <Route path="/" element={<Products />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/"
+            element={
+              <Products
+                cart={cart}
+                setCart={setCart}
+                products={products}
+                setProducts={setProducts}
+                toggleCartModal={toggleCartModal}
+              />
+            }
+          />
         </Routes>
+
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50 ${
+            cartModalOpen ? "visible" : "invisible"
+          }`}
+        >
+          <div className="bg-white p-6 rounded-lg w-full max-w-md h-full overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <img
+                src={backIcon}
+                alt="Go Back Icon"
+                className="cursor-pointer"
+                onClick={() => {
+                  setCartModalOpen(!cartModalOpen);
+                }}
+              />
+              <h2 className="text-2xl font-bold">Cart</h2>
+              <button
+                className={`text-gray-500 hover:text-gray-700 ${
+                  cart.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={() => {
+                  if (cart.length > 0) {
+                    setCart([]);
+                  }
+                }}
+              >
+                Remove All
+              </button>
+            </div>
+
+            {cart.length === 0 ? (
+              <p>Your cart is empty.</p>
+            ) : (
+              <div className="space-y-4">
+                {cart.map((productId) => {
+                  const product = products.find((p) => p.id === productId);
+                  if (!product) return null;
+
+                  return (
+                    <div
+                      key={product.id}
+                      className="flex justify-between items-center"
+                    >
+                      <div className="flex items-center">
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
+                          className="w-16 h-16 object-cover rounded-md mr-4"
+                        />
+                        <div>
+                          <h3 className="text-lg font-medium">
+                            {product.name}
+                          </h3>
+                          <p className="text-gray-600">{product.price}</p>
+                        </div>
+                      </div>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => {
+                          setCart(cart.filter((id) => id !== product.id));
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </BrowserRouter>
     </>
   );
