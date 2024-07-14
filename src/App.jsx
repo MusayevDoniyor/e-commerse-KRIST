@@ -57,7 +57,7 @@ function App() {
           <nav
             className={`${
               menuOpen ? "block" : "hidden"
-            } lg:block lg:flex lg:items-center lg:gap-6 text-lg mt-4 lg:mt-0`}
+            }  lg:flex lg:items-center lg:gap-6 text-lg mt-4 lg:mt-0`}
           >
             <ul className="flex flex-col lg:flex-row gap-6">
               <li>

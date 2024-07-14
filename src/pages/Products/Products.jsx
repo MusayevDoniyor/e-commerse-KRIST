@@ -12,7 +12,7 @@ const Products = () => {
 
   const [brands, setBrands] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState("");
-  const [brandsOpen, setBrandsOpen] = useState(true);
+  const [brandsOpen, setBrandsOpen] = useState(false);
 
   const colorMapping = {
     "#FFD700": "Gold",
@@ -53,7 +53,7 @@ const Products = () => {
 
   const [colors, setColors] = useState([]);
   const [selectedColor, setSelectedColor] = useState("");
-  const [colorsOpen, setColorsOpen] = useState(true);
+  const [colorsOpen, setColorsOpen] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -119,14 +119,15 @@ const Products = () => {
   };
 
   return (
-    <div className="grid grid-cols-4 grid-">
-      <aside>
-        <div>Shop &gt; All Products</div>
+    <div className="grid grid-cols-1 lg:grid-cols-[275px,1fr] gap-6 p-6">
+      <aside className="bg-gray-50 p-6 rounded-lg">
+        <div className="mb-4">Shop &gt; All Products</div>
+
         <div
           className="flex justify-between items-center cursor-pointer"
           onClick={() => toggleAccordion(setBrandsOpen, brandsOpen)}
         >
-          <h3 className="text-2xl my-5">Product Categories</h3>
+          <h3 className="text-2xl my-5 font-bold">Product Categories</h3>
           <img
             src={downArrow}
             alt="Toggle Brands"
@@ -135,6 +136,7 @@ const Products = () => {
             }`}
           />
         </div>
+
         {brandsOpen && (
           <ul className="flex flex-col gap-5">
             {brands.map((brand, index) => (
@@ -158,7 +160,7 @@ const Products = () => {
                     }}
                     onChange={(e) => setSelectedBrand(e.target.value)}
                   />
-                  <label htmlFor={brand} className="text-base font-medium">
+                  <label htmlFor={brand} className="text-[15px] font-medium">
                     {brand}
                   </label>
                 </div>
@@ -171,7 +173,7 @@ const Products = () => {
           className="flex justify-between items-center cursor-pointer"
           onClick={() => toggleAccordion(setColorsOpen, colorsOpen)}
         >
-          <h3 className="text-2xl my-5">Filter by Color</h3>
+          <h3 className="text-2xl font-bold my-5">Filter by Color</h3>
           <img
             src={downArrow}
             alt="Toggle Colors"
@@ -197,7 +199,7 @@ const Products = () => {
                   }}
                   className="w-7 h-7 rounded-md mr-2 cursor-pointer outline-none outline border border-[#333] checked:ring-2 checked:ring-gray-800 block"
                 />
-                <label htmlFor={color} className="text-base font-medium">
+                <label htmlFor={color} className="text-[15px] font-medium">
                   {colorMapping[color]}
                 </label>
               </li>
@@ -206,11 +208,11 @@ const Products = () => {
         )}
       </aside>
 
-      <main className="col-span-5 py-5 px-6">
+      <main className="p-6 rounded-lg ">
         {loading ? (
           <p>Loading...</p>
         ) : products.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {products.map((product) => (
               <Card key={product.id} product={product} />
             ))}
