@@ -32,7 +32,7 @@ const Card = ({
 
       <div className="p-4">
         <h4 className="text-lg font-medium">
-          <Link to={`/products/${product.id}`}>{product.name}</Link>
+          <Link to={`/${product.id}`}>{product.name}</Link>
         </h4>
         <p className="text-gray-600 mb-4">{product.description}</p>
 

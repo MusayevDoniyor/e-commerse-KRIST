@@ -8,6 +8,7 @@ import cartIcon from "./assets/shoppingBasket.svg";
 import menuCloseIcon from "./assets/menu-close.svg";
 import menuOpenIcon from "./assets/menu-open.svg";
 import backIcon from "./assets/backIcon.svg";
+import SingleProduct from "./pages/SingleProduct/SingleProduct";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -157,6 +158,8 @@ function App() {
               />
             }
           />
+
+          <Route path=":productId" element={<SingleProduct />} />
         </Routes>
 
         <div
