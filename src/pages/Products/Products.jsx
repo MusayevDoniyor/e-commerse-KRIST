@@ -6,6 +6,8 @@ import checkedIcon from "../../assets/checkedIcon.svg";
 import Card from "../../components/Card";
 import downArrow from "../../assets/arrowDown.svg";
 import rightArrowIcon from "../../assets/rightArrowIcon.svg";
+import menu from "../../assets/menu.svg";
+import listItem from "../../assets/list-item.svg";
 
 const Products = ({ cart, setCart, toggleCartModal, setProducts }) => {
   const dispatch = useDispatch();
@@ -58,6 +60,8 @@ const Products = ({ cart, setCart, toggleCartModal, setProducts }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const [sortOrder, setSortOrder] = useState("asc");
+
   const baseURL = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
@@ -103,7 +107,14 @@ const Products = ({ cart, setCart, toggleCartModal, setProducts }) => {
 
       try {
         const response = await api.get(query);
-        dispatch(addProducts(response.data));
+        const sortedProducts = [...response.data].sort((a, b) => {
+          if (sortOrder === "asc") {
+            return parseFloat(a.price) - parseFloat(b.price);
+          } else {
+            return parseFloat(b.price) - parseFloat(a.price);
+          }
+        });
+        dispatch(addProducts(sortedProducts));
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching Products", error);
@@ -113,14 +124,17 @@ const Products = ({ cart, setCart, toggleCartModal, setProducts }) => {
     }
 
     fetchProducts();
-  }, [selectedBrand, selectedColor]);
+  }, [selectedBrand, selectedColor, sortOrder]);
 
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
   const toggleAccordion = (setFunction, currentState) => {
     setFunction(!currentState);
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[275px,1fr] gap-6 p-6">
+    <div className="grid mt-[80px] grid-cols-1 lg:grid-cols-[275px,1fr] gap-6 p-6">
       <aside className="bg-gray-50 p-6 rounded-lg">
         <div className="mb-4 flex text-base items-center">
           Shop
@@ -211,26 +225,76 @@ const Products = ({ cart, setCart, toggleCartModal, setProducts }) => {
             ))}
           </ul>
         )}
+
+        <div className="flex justify-center mt-7">
+          <button
+            className="bg-slate-200 hover:bg-slate-300 text-black font-medium px-10 py-3 rounded-md text-lg"
+            onClick={() => {
+              setSelectedBrand("");
+              setSelectedColor("");
+            }}
+          >
+            Clear Filter
+          </button>
+        </div>
       </aside>
 
-      <main className="p-6 rounded-lg ">
+      <main className="p-6 mt-7 rounded-lg ">
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
           </div>
         ) : products.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {products.map((product) => (
-              <Card
-                key={product.id}
-                product={product}
-                cart={cart}
-                setCart={setCart}
-                toggleCartModal={toggleCartModal}
-                products={products}
-                setProducts={setProducts}
-              />
-            ))}
+          <div>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+              <div className="flex gap-5 items-center">
+                <img
+                  className="size-6 cursor-pointer"
+                  src={menu}
+                  alt="Menu Icon"
+                />
+                <img
+                  className="size-6 cursor-pointer"
+                  src={listItem}
+                  alt="List Item Icon"
+                />
+                <p className=" md:block mb-7 text-lg font-normal pt-7">
+                  Showing 1 - {products.length} of {products.length}
+                </p>
+              </div>
+
+              <div className="flex items-center">
+                <p
+                  className="cursor-pointer text-lg font-medium"
+                  onClick={toggleSortOrder}
+                >
+                  Shot By Price{" "}
+                  <img
+                    className="inline"
+                    src={downArrow}
+                    alt="Arrow Down"
+                    style={{
+                      transform:
+                        sortOrder === "asc" ? "rotate(0deg)" : "rotate(180deg)",
+                    }}
+                  />
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {products.map((product) => (
+                <Card
+                  key={product.id}
+                  product={product}
+                  cart={cart}
+                  setCart={setCart}
+                  toggleCartModal={toggleCartModal}
+                  products={products}
+                  setProducts={setProducts}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <p className="text-3xl font-semibold">No products :(</p>

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Products from "./pages/Products/Products";
 import downArrow from "./assets/arrowDown.svg";
 import searchIcon from "./assets/searchIcon.svg";
@@ -12,8 +12,15 @@ import backIcon from "./assets/backIcon.svg";
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartModalOpen, setCartModalOpen] = useState(false);
-  const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const storedCart = localStorage.getItem("cart");
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -26,7 +33,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <header className="flex flex-col lg:flex-row justify-between items-center py-5 px-6">
+        <header className="fixed top-0 left-0 right-0 z-50 flex flex-col lg:flex-row justify-between items-center py-5 px-6 bg-white">
           <div className="text-5xl">
             <NavLink to={"/"}>KRIST</NavLink>
           </div>
