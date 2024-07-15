@@ -188,7 +188,7 @@ const SingleProduct = () => {
                 <div className="flex items-center gap-3 border border-black rounded-lg px-4 py-2 sm:px-6 sm:py-3">
                   <span
                     className="cursor-pointer"
-                    onClick={() => setCount(count + 1)}
+                    onClick={() => setCount(count - 1)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +212,7 @@ const SingleProduct = () => {
 
                   <span
                     className="cursor-pointer"
-                    onClick={() => setCount(count - 1)}
+                    onClick={() => setCount(count + 1)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
